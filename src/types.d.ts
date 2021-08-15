@@ -19,3 +19,20 @@ type WithGradient<T> = T & {
   stroke?: string;
   fill?: string;
 };
+
+type Category = {
+  id: string;
+  name: string;
+  productCount: number;
+};
+
+type Product = {
+  id: number;
+  name: string;
+  image: {
+    caption: string;
+    url: string;
+  };
+  price: string;
+  shortDescription: string;
+};

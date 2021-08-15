@@ -1,2 +1,3 @@
-export { Catalogue, Product } from "./catalogue";
-export { Fallback } from "./fallback";
+export {Catalogue} from './catalogue';
+export {Product} from './product';
+export {Fallback} from './fallback';

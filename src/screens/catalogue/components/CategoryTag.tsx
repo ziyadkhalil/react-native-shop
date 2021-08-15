@@ -8,7 +8,7 @@ import {colors} from '@src/theme';
 const AText = Animated.createAnimatedComponent(Text);
 
 type Props = {
-  item: string;
+  item: Category;
   index: number;
   activeCategoryIdx: Animated.SharedValue<number>;
 };
@@ -32,7 +32,7 @@ export function CategoryTag({item, index, activeCategoryIdx}: Props) {
   return (
     <TapGestureHandler onGestureEvent={tapHandler}>
       <AText mr={2} variant="tag" style={style}>
-        {item}
+        {item.name}
       </AText>
     </TapGestureHandler>
   );
