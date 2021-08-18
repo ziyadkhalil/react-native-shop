@@ -7,10 +7,10 @@ type TabsParamList = {
 
 type CatalougeStackParamList = {
   Catalogue: undefined;
-  Product: {productId: string; filter?: string};
+  Product: {product: Product};
 };
 
-type TextVariant = 'title1' | 'title2' | 'title3' | 'body' | 'tabbar' | 'tag';
+type TextVariant = 'title1' | 'title2' | 'title3' | 'title4' | 'body' | 'tabbar' | 'tag';
 
 type WithGradient<T> = T & {
   gradient?: [string, string];
@@ -27,7 +27,7 @@ type Category = {
 };
 
 type Product = {
-  id: number;
+  id: string;
   name: string;
   image: {
     caption: string;

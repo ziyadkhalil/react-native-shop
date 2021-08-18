@@ -1,27 +1,49 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Box} from 'native-base';
-import {FlatList, ListRenderItem} from 'react-native';
-import Animated, {runOnJS, useAnimatedReaction} from 'react-native-reanimated';
+import {FlatList, FlatListProps, ListRenderItem} from 'react-native';
+import Animated, {
+  runOnJS,
+  useAnimatedReaction,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import {padding} from '@src/const';
 
 import {ProductCard} from './components';
 import {useProductsInfiniteQuery} from './hooks';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 type Props = {
   activeCategoryIdSv: Animated.SharedValue<string>;
 };
 
+const AFlatList = Animated.createAnimatedComponent<FlatListProps<Product>>(FlatList);
+
+type Navigation = NavigationProp<CatalougeStackParamList, 'Catalogue'>;
 export function Products({activeCategoryIdSv}: Props) {
+  const navigation = useNavigation<Navigation>();
   const [activeCategoryId, setActiveCategoryId] = useState('');
+  const scrollYMemo = useRef<Record<string, number>>({});
   const products = useProductsInfiniteQuery(activeCategoryId);
 
   const categoriesLoading = !activeCategoryId;
 
+  const yOffset = useSharedValue(0);
+  const onScroll = useAnimatedScrollHandler(e => (yOffset.value = e.contentOffset.y));
+
+  function onActiveCategoryChange(id: string, lastY: number) {
+    scrollYMemo.current = {...scrollYMemo.current, [activeCategoryId]: lastY};
+    setActiveCategoryId(id);
+  }
+
   useAnimatedReaction(
-    () => activeCategoryIdSv.value,
-    index => runOnJS(setActiveCategoryId)(index),
-    [],
+    () => activeCategoryIdSv.value !== activeCategoryId && activeCategoryIdSv.value,
+    id => {
+      id && runOnJS(onActiveCategoryChange)(id, yOffset.value);
+    },
+    [onActiveCategoryChange],
   );
 
   const ListFooterComponent =
@@ -29,8 +51,33 @@ export function Products({activeCategoryIdSv}: Props) {
       <Loader categoriesLoading={categoriesLoading} />
     ) : null;
 
+  const ref = useAnimatedRef<FlatList>();
+
+  useEffect(() => {
+    requestAnimationFrame(() =>
+      ref.current?.scrollToOffset({offset: scrollYMemo.current[activeCategoryId], animated: false}),
+    );
+  }, [activeCategoryId]);
+
+  const renderProduct: ListRenderItem<Product> = React.useMemo(
+    () =>
+      ({item: product}) =>
+        (
+          <ProductCard
+            favorite={false}
+            onPress={() => navigation.navigate('Product', {product})}
+            onFavoritePress={() => {}}
+            mr={padding / 4}
+            product={product}
+          />
+        ),
+    [navigation],
+  );
+
   return (
-    <FlatList
+    <AFlatList
+      ref={ref}
+      onScroll={onScroll}
       numColumns={2}
       initialNumToRender={5}
       maxToRenderPerBatch={5}
@@ -47,8 +94,6 @@ export function Products({activeCategoryIdSv}: Props) {
 }
 
 const keyExtractor = ({id}: Product) => `${id}`;
-
-const renderProduct: ListRenderItem<Product> = ({item: product}) => <ProductCard mr={padding / 4} {...product} />;
 
 const Loader = ({categoriesLoading}: {categoriesLoading: boolean}) => (
   <Box flexDirection="row" flexWrap="wrap">

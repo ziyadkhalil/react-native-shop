@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {ViewStyle} from 'react-native';
+import React from 'react';
+import {Pressable, ViewStyle} from 'react-native';
 import {Box, IBoxProps, Image} from 'native-base';
 import ContentLoader, {Rect} from 'react-content-loader/native';
 
@@ -12,25 +12,39 @@ import {FavoriteButton} from './FavoriteButton';
 const cardWidth = (screenWidth - padding * 3) / 2;
 const cardHeight = cardWidth + 90;
 
-type Props = (Product & {loading?: false}) | {loading: true};
+type Props = (
+  | {
+      product: undefined;
+    }
+  | {
+      product: Product;
+      favorite: boolean;
+      onFavoritePress: (id: string) => void;
+      onPress: (id: string) => void;
+    }
+) &
+  IBoxProps;
 
 export function ProductCard(props: Props & IBoxProps) {
-  const [favorite, setFavorite] = useState(false);
-  const onFavoritePress = () => setFavorite(old => !old);
-  if (props.loading) return <ProductCard.Loader />;
-  const {image, name, price} = props;
+  if (!props.product) return <ProductCard.Loader />;
+  const {onPress, onFavoritePress, product, favorite, ...boxProps} = props;
+  const {image, name, price, id} = product;
+  const _onPress = () => onPress(id);
+  const _onFavoritePress = () => onFavoritePress(id);
   return (
-    <Box {...props} w={cardWidth} h={cardHeight}>
-      <Image
-        alt={image.caption}
-        style={{aspectRatio: 1}}
-        source={{uri: image.url}}
-        mb={6}
-        width={cardWidth}
-        borderRadius={8}
-        overflow="hidden"
-      />
-      <FavoriteButton favorite={favorite} onPress={onFavoritePress} pos="absolute" top={cardWidth - 18} right={4} />
+    <Box {...boxProps} w={cardWidth} h={cardHeight}>
+      <Pressable onPress={_onPress}>
+        <Image
+          alt={image.caption}
+          style={{aspectRatio: 1}}
+          source={{uri: image.url}}
+          mb={6}
+          width={cardWidth}
+          borderRadius={8}
+          overflow="hidden"
+        />
+      </Pressable>
+      <FavoriteButton favorite={favorite} onPress={_onFavoritePress} pos="absolute" top={cardWidth - 18} right={4} />
       <Text numberOfLines={2} variant="body" mb={1.5}>
         {name}
       </Text>

@@ -7,6 +7,8 @@ import {Header} from '@src/components/Header';
 import {loadFonts} from '@src/fonts';
 
 import {Tab} from './tabbar';
+import {Text} from '@src/components';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 async function bootstrap() {
   await loadFonts();
@@ -21,6 +23,7 @@ export function Entry() {
   }, []);
 
   if (appInitialState === 'loading') return <AppLoading />;
+
   return (
     <Tab.Navigator initialRouteName="CatalogueStack">
       <Tab.Screen name="Home" component={screens.Fallback} />

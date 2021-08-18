@@ -14,7 +14,7 @@ export function useCategoriesQuery(options?: UseQueryOptions<Category[]>) {
       api.get<Response>('/categories').then(res => {
         const clothesCategory = res.data.categories.find(c => c.id === CLOTHES_CATEGORY_ID);
         if (!clothesCategory || clothesCategory.subCategories.length === 0)
-          throw new Error('Clothes category not ss`found.');
+          throw new Error('Clothes category not found.');
         return [
           {
             id: clothesCategory.id,

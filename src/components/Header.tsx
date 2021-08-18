@@ -7,6 +7,7 @@ import {ArrowBackIcon} from '@src/assets';
 import {colors} from '@src/theme';
 
 import {Text} from './Text';
+import {Platform} from 'react-native';
 
 const headerHeight = 24 + 28;
 
@@ -26,7 +27,7 @@ export const Header = ({
 }: NativeStackHeaderProps | (BottomTabHeaderProps & {back?: undefined})) => {
   return (
     <Box bg={headerBg} safeAreaTop>
-      <Center height={headerHeight} pb="7" px="3">
+      <Center height={headerHeight} pb="7" pt={Platform.OS === 'android' ? 4 : 0} px="3">
         {back && <BackButton onPress={navigation.goBack} />}
         <Text variant="title2">{options.title ?? route.name}</Text>
       </Center>

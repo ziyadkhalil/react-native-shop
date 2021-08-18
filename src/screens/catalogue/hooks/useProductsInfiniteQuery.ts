@@ -5,7 +5,7 @@ const perPage = 16;
 
 type Response = {
   products: {
-    id: number;
+    id: string;
     name: string;
     image: {
       caption: string;
@@ -33,7 +33,7 @@ export function useProductsInfiniteQuery(categoryId: string, options?: UseQueryO
             id: p.id,
             name: p.name,
             price: p.maximumPriceString,
-            image: {caption: p.image.caption, url: p.image.sizes[2].url},
+            image: {caption: p.image.caption, url: p.image.sizes[0].url},
             shortDescription: p.shortDescription,
           })),
         );

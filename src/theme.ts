@@ -1,31 +1,48 @@
 import {extendTheme, ITextProps} from 'native-base';
 import {Fonts} from './fonts';
 
+// lineheights causse warnings in native base, check https://github.com/styled-components/css-to-react-native/issues/40
+export const lineHeights: Partial<Record<TextVariant, Record<'lineHeight', number>>> = {
+  title1: {lineHeight: 31},
+  title2: {lineHeight: 23},
+  title3: {lineHeight: 22},
+  title4: {lineHeight: 23},
+  body: {lineHeight: 19},
+  tabbar: {lineHeight: 13},
+};
+
 export const textVariants: Record<TextVariant, ITextProps> = {
   title1: {
     fontFamily: Fonts.sfBold,
     fontSize: 25,
-    lineHeight: 31,
+    // lineHeight: 31,
     letterSpacing: 0.35,
   },
   title2: {
     fontFamily: Fonts.sfBold,
     fontSize: 19,
     color: 'white',
-    lineHeight: 23,
+    // lineHeight: 23,
     letterSpacing: 0.35,
   },
   title3: {
     fontFamily: Fonts.sfBold,
     fontSize: 17,
     color: 'primary.700',
-    lineHeight: 22,
+    // lineHeight: 22,
     letterSpacing: -0.41,
+  },
+  title4: {
+    fontFamily: Fonts.sfRegular,
+    fontSize: 19,
+    color: 'primary.700',
+    // lineHeight: 23,
+    letterSpacing: -0.49,
   },
   body: {
     fontFamily: Fonts.sfRegular,
     fontSize: 14,
-    lineHeight: 19,
+    // lineHeight: 19,
     color: 'primary.700',
     letterSpacing: -0.15,
   },
@@ -42,7 +59,7 @@ export const textVariants: Record<TextVariant, ITextProps> = {
   },
   tabbar: {
     fontSize: 10,
-    lineHeight: 13,
+    // lineHeight: 13,
     color: 'grey',
     fontFamily: Fonts.sfBold,
   },

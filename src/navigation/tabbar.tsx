@@ -5,6 +5,7 @@ import {TypedNavigator} from '@react-navigation/native';
 import {theme, colors} from '@src/theme';
 import {HomeIcon, CatalogueIcon, HeartIcon, ProfileIcon} from '@src/assets';
 import {Text, Header} from '@src/components';
+import {Platform} from 'react-native';
 
 const BaseTab = createBottomTabNavigator<TabsParamList>();
 
@@ -13,7 +14,8 @@ const tabBarStyle = {
   borderTopRightRadius: 24,
   borderTopWidth: 0,
   paddingTop: 5,
-  height: 86,
+  paddingBottom: Platform.OS === 'android' ? 5 : 30,
+  height: Platform.OS === 'ios' ? 86 : 60,
   ...theme.shadows()[4],
 };
 
