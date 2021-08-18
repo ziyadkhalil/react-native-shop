@@ -62,15 +62,7 @@ export function Products({activeCategoryIdSv}: Props) {
   const renderProduct: ListRenderItem<Product> = React.useMemo(
     () =>
       ({item: product}) =>
-        (
-          <ProductCard
-            favorite={false}
-            onPress={() => navigation.navigate('Product', {product})}
-            onFavoritePress={() => {}}
-            mr={padding / 4}
-            product={product}
-          />
-        ),
+        <ProductCard onPress={() => navigation.navigate('Product', {product})} mr={padding / 4} product={product} />,
     [navigation],
   );
 

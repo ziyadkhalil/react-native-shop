@@ -6,6 +6,8 @@ import {theme, colors} from '@src/theme';
 import {HomeIcon, CatalogueIcon, HeartIcon, ProfileIcon} from '@src/assets';
 import {Text, Header} from '@src/components';
 import {Platform} from 'react-native';
+import {useSelector, useStore} from 'react-redux';
+import {RootState} from '@src/store';
 
 const BaseTab = createBottomTabNavigator<TabsParamList>();
 
@@ -20,14 +22,18 @@ const tabBarStyle = {
 };
 
 function Navigator(props: React.ComponentProps<TypedNavigator<TabsParamList, any, any, any, any>['Navigator']>) {
+  const noOfLikes = useSelector<RootState>(state => state.products.count);
   return (
     <BaseTab.Navigator
       screenOptions={({route}) => ({
         headerShown: route.name !== 'CatalogueStack',
         header: Header,
+        tabBarBadge: route.name === 'Favorite' && noOfLikes ? noOfLikes : undefined,
         tabBarStyle,
-        tabBarIcon: ({focused}) => {
-          const iconProps: WithGradient<{}> = {
+        tabBarIcon: ({focused, size}) => {
+          const iconProps: WithGradient<{width: number; height: number}> = {
+            width: size,
+            height: size,
             ...(focused ? {gradient: colors.primaryGradient, gradientFill: true, gradientStroke: true} : {}),
           };
           switch (route.name) {

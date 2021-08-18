@@ -8,6 +8,8 @@ import {colors} from '@src/theme';
 import {screenWidth, padding} from '@src/const';
 
 import {FavoriteButton} from './FavoriteButton';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, likedProductSlice, RootState, useMutateProduct} from '@src/store';
 
 const cardWidth = (screenWidth - padding * 3) / 2;
 const cardHeight = cardWidth + 90;
@@ -18,19 +20,19 @@ type Props = (
     }
   | {
       product: Product;
-      favorite: boolean;
-      onFavoritePress: (id: string) => void;
       onPress: (id: string) => void;
     }
 ) &
   IBoxProps;
 
 export function ProductCard(props: Props & IBoxProps) {
+  const isFavorite = !!useSelector<RootState>(state => state.products.liked[props.product?.id ?? '']);
+  const {like, unlike} = useMutateProduct();
   if (!props.product) return <ProductCard.Loader />;
-  const {onPress, onFavoritePress, product, favorite, ...boxProps} = props;
+  const {onPress, product, ...boxProps} = props;
   const {image, name, price, id} = product;
   const _onPress = () => onPress(id);
-  const _onFavoritePress = () => onFavoritePress(id);
+  const _onFavoritePress = () => (isFavorite ? unlike(id) : like(id));
   return (
     <Box {...boxProps} w={cardWidth} h={cardHeight}>
       <Pressable onPress={_onPress}>
@@ -44,7 +46,7 @@ export function ProductCard(props: Props & IBoxProps) {
           overflow="hidden"
         />
       </Pressable>
-      <FavoriteButton favorite={favorite} onPress={_onFavoritePress} pos="absolute" top={cardWidth - 18} right={4} />
+      <FavoriteButton favorite={isFavorite} onPress={_onFavoritePress} pos="absolute" top={cardWidth - 18} right={4} />
       <Text numberOfLines={2} variant="body" mb={1.5}>
         {name}
       </Text>
