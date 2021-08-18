@@ -5,13 +5,14 @@ import AppLoading from 'expo-app-loading';
 import * as screens from '@src/screens';
 import {Header} from '@src/components/Header';
 import {loadFonts} from '@src/fonts';
+import Cache from '@src/cache';
 
 import {Tab} from './tabbar';
-import {Text} from '@src/components';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {likedProductSlice, store} from '@src/store';
 
 async function bootstrap() {
-  await loadFonts();
+  const [_, state] = await Promise.all([loadFonts(), Cache.getLikedProductsCache()]);
+  state && store.dispatch(likedProductSlice.actions.set(state));
 }
 
 export function Entry() {

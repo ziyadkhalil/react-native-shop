@@ -1,5 +1,6 @@
 import {useInfiniteQuery, UseQueryOptions} from 'react-query';
 import {api} from '@src/api';
+import {store} from '@src/store';
 
 const perPage = 16;
 
